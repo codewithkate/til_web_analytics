@@ -183,3 +183,9 @@ cython_debug/
 # Airbyte
 # exclude configurations copied from airbyte
 config.json
+
+# Logging
+*.log*
+
+# Data
+*/data
