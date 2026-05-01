@@ -3,16 +3,20 @@ Data extraction using Amplitude's Export API
 https://amplitude.com/docs/apis/analytics/export
 
 Requires:
-  - Amplitude API and Secret Keys
-  - Time parameters of the form:
-    - start_time = '20241101T00'  
-    - end_time = '20241101T23'
+    - Amplitude API and Secret Keys
+    - Time parameters of the form:
+        - start_time = '20241101T00'  
+        - end_time = '20241101T23'
 """  
 
 # Libraries
 import os
 import requests
-import json
+import zipfile     
+import gzip        
+import shutil     
+import tempfile
+import logging
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
@@ -35,9 +39,9 @@ def extract_amplitude_data(start_time, end_time, api_key, secret_key):
         print('Data successfully retrieved 🥳')
         data = response.content
         # Save the zip file
-        with open('./data/data.zip', 'wb') as file:
+        with open('amp_events.zip', 'wb') as file:
           file.write(data)
-        print('The data.zip file has been saved 💌')
+        print('The amp_events.zip file has been saved 💌')
         return True
 
     else:
