@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 # Load .env file
 load_dotenv()
 
-def extract_amplitude_data(start_time, end_time, api_key, secret_key):
+def extract_amplitude_data(start_time, end_time, api_key, secret_key, zip_path='data/response.zip'):
     # API endpoint is the EU residency server
     url = 'https://analytics.eu.amplitude.com/api/2/export'
     params = {
@@ -35,40 +35,29 @@ def extract_amplitude_data(start_time, end_time, api_key, secret_key):
     # Make the GET Request with basic authentication
     response = requests.get(url, params=params, auth=(api_key, secret_key))
 
-    if response.status_code == 200:
-        # The request was successful. Extract the data.
+    if response.ok:
         print('Data successfully retrieved 🥳')
-        data = response.content
+        
         # Save the zip file
-        with open('amp_events.zip', 'wb') as file:
+        data = response.content
+        with open(zip_path, 'wb') as file:
             file.write(data)
         print('Data has been saved to ./amp_events.zip 💌')
+        
         return True
 
     else:
         # The request failed. Print the error.
         print(f"Error: {response.status_code} {response.text}")
+        
         return False
-    
-
-# Read .env file
-api_key = os.getenv('AMP_API_KEY')
-secret_key = os.getenv('AMP_SECRET_KEY')
-
-# Format the start and end time strings (YYYYMMDDTHH)
-yesterday = datetime.now() - timedelta(days=1)
-start_time = yesterday.strftime('%Y%m%dT00')
-end_time = yesterday.strftime('%Y%m%dT23')
-
-# Call the function to extract amplitude events
-amp_events = extract_amplitude_data(start_time=start_time, end_time=end_time, api_key=api_key, secret_key=secret_key)
 
 def extract_json_files(zip_path):
 
     # Make a temp dir to open zip files
     temp_dir = tempfile.mkdtemp()
     # Create local output directory
-    data_dir = "data"
+    data_dir = f"{zip_path}/processed"
     os.makedirs(data_dir, exist_ok=True)
     try:
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
@@ -102,6 +91,29 @@ def extract_json_files(zip_path):
         # Log error
         print(e)
 
+# Read .env file
+api_key = os.getenv('AMP_API_KEY')
+secret_key = os.getenv('AMP_SECRET_KEY')
+
+# Format the start and end time strings (YYYYMMDDTHH)
+yesterday = datetime.now() - timedelta(days=1)
+start_time = yesterday.strftime('%Y%m%dT00')
+end_time = yesterday.strftime('%Y%m%dT23')
+
+# Make a data directory
+data_dir = 'data'
+os.makedirs(data_dir, exist_ok=True)
+zip_filename = f'{data_dir}/amp_events.zip'
+
+# Call the function to extract amplitude events
+amp_events = extract_amplitude_data(
+    start_time=start_time, 
+    end_time=end_time, 
+    api_key=api_key, 
+    secret_key=secret_key, 
+    zip_path=zip_path
+)
+
 if amp_events:
-    extract_json_files(zip_path="amp_events.zip")
+    extract_json_files(data_dir=data_dir, zip_filename=zip_filename)
 
