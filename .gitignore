@@ -187,6 +187,10 @@ config.json
 # Logging
 *.log*
 
-# Data
+# Extracting
 */data
 /amplitude/*.zip
+
+# Loading
+/aws/.aws_env
+/aws/week_2
