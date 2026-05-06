@@ -41,13 +41,10 @@ logger = logging.getLogger()
 logger.info('Logger initialized')
 
 
-def extract_amplitude_data(start_time, end_time, api_key, secret_key, zip_path='data/response.zip'):
+def make_api_call(params, api_key, secret_key, zip_path='data/response.zip'):
     # API endpoint is the EU residency server
     url = 'https://analytics.eu.amplitude.com/api/2/export'
-    params = {
-        'start': start_time,
-        'end': end_time
-    }
+    params = params
 
     # Make the GET Request with basic authentication
     response = requests.get(url, params=params, auth=(api_key, secret_key))
@@ -115,9 +112,13 @@ os.makedirs(data_dir, exist_ok=True)
 zip_filename = f'{data_dir}/amp_events.zip'
 
 # Call the function to extract amplitude events
-amp_events = extract_amplitude_data(
-    start_time=start_time, 
-    end_time=end_time, 
+params = {
+        'start': start_time,
+        'end': end_time
+}
+
+amp_events = make_api_call(
+    params = params,
     api_key=api_key, 
     secret_key=secret_key, 
     zip_path=zip_filename
