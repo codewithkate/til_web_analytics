@@ -194,3 +194,4 @@ config.json
 # Loading
 /aws/.aws_env
 /aws/week_2
+/aws/logs
