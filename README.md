@@ -4,12 +4,15 @@ Extract and Load data from an API to AWS Bucket.
 ## Key Features
 
 **Make an API Call**
+
 Make a GET Request that saves the result to memory.
 
 **Extract files**
+
 Unzip .zip and .gz files and copy contents into a output location.
 
 **Other Features**
+
 - Upload files into an S3 Bucket
 - Logging
 
