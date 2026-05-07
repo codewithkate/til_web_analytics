@@ -55,7 +55,7 @@ def extract(url, params, api_key, secret_key, data_dir='data', max_tries=3):
                 logger.info(f'Attempt #{count} to call {url}')
 
         else:
-            # The request failed. Print the error.
+            # The request failed. Log the error.
             logger.info(f"Error: {response.status_code} {response.text}")
             return False
             break

@@ -36,15 +36,11 @@ params = {'start': start_time, 'end': end_time}
 data_dir = Path('data')
 
 result, zip_path = extract(AMP_URL, params, AMP_API_KEY, AMP_SECRET_KEY, data_dir)
-print(result)
-print(zip_path)
 
 if result:
     temp_dir = decompress_zip(zip_path)
-    print(temp_dir)
     process = decompress_gzip(temp_dir, data_dir)
     local_files = list(data_dir.glob('*.json'))
-    print(local_files)
     
     processed = 0
     
