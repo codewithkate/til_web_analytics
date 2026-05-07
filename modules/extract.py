@@ -45,7 +45,7 @@ def extract(url, params, api_key, secret_key, data_dir='data', max_tries=3):
             with open(filename, 'wb') as file:
                 file.write(data)
             logger.info(f'Data has been saved to {filename}')
-            return True
+            return True, filename
             break
 
         elif response.status_code >= 500:
@@ -60,3 +60,55 @@ def extract(url, params, api_key, secret_key, data_dir='data', max_tries=3):
             return False
             break
 
+def decompress_zip(zip_path):
+    """
+    The function unpackages the first layer of compression (.zip files) from a local data directory.
+    Outputs are stored in a temporary directory.
+
+    Args:
+        zip_path (Path object): _description_
+    """    
+    temp_dir = tempfile.mkdtemp()
+
+    try:
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(temp_dir)
+        logger.info(f"Zip file opened in temporary folder located at {temp_dir}")
+        return temp_dir
+    except Exception as e:
+        logger.info(e)
+        return None
+
+def decompress_gzip(temp_dir, data_dir):
+    """
+    The function unpackages the second layer of compression (.gz files) located in a temporary directory.
+    Must run decompress_zip() to create the temporary directory for this function's input and output.
+
+    Args:
+        data_dir (_type_): _description_
+    """
+    # Make a temp dir to open zip files
+    try:
+        # FOR each compressed .gz file inside the zip archive DO
+        day_folder = next(f for f in os.listdir(temp_dir) if f.isdigit())
+        day_path = Path(os.path.join(temp_dir, day_folder))
+
+        # Walk through the day folder and decompress each .gz file to the data directory
+        for root, _, files in os.walk(day_path):
+            for file in files:
+                if file.endswith('.gz'):
+                    gz_path = os.path.join(root, file)
+                    json_filename = file[:-3]  # Remove .gz extension
+                    output_path = os.path.join(data_dir, json_filename)
+                    with gzip.open(gz_path, 'rb') as gz_file, open(output_path, 'wb') as out_file:
+                        shutil.copyfileobj(gz_file, out_file)
+                        logger.info(f'{file} processed')
+        return True
+        # Delete the temporary directory
+        shutil.rmtree(temp_dir)
+        logger.info("All files extracted to the 'data' directory!")
+
+    except Exception as e:
+        # Log error
+        logger.info(e)
+        return False     

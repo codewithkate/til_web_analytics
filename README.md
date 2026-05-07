@@ -1,6 +1,6 @@
 # Extracting Website data from Amplitude
 
-![](amplitude_extract_diagram.png)
+![](src/amplitude_extract_diagram.png)
 _figure 1_
 
 ## The Plan
