@@ -1,7 +1,8 @@
 # ELT Library 
 Extract and Load data from an API to AWS Bucket.
 
-## Key Features
+![](src/amplitude_extract_diagram.png)
+_figure 1_
 
 **Make an API Call**
 
