@@ -1,66 +1,29 @@
-# Extracting Website data from Amplitude
+# ELT Library 
+Extract and Load data from an API to AWS Bucket.
 
 ![](src/amplitude_extract_diagram.png)
 _figure 1_
 
-## The Plan
+**Make an API Call**
 
-**Use Case**
-Data from Amplitude and MailChimp will be used to understand how web visitors relate to live events and staff blogs.
+Make a GET Request that saves the result to memory.
 
-**Data Extraction Method**
-This project is designed for incremental batch extraction on a daily basis from the source url, as defined in the named directory.
+**Extract files**
 
-**Airbyte vs Custom-Built Solutions**
+Unzip .zip and .gz files and copy contents into a output location.
 
-Connection
+**Other Features**
 
-```python
+- Upload files into an S3 Bucket
+- Logging
 
-```
 
-Source
+## Planned Improvements
+---
+- **How users can get started**: Installation/setup instructions with usage examples
+- **Where users can get help**: Support resources and documentation links
+- **Who maintains and contributes**: Maintainer information and contribution guidelines
+- **Parameterization**: Accept parameters instead of a hardcoded values.
+- **Functional Decomposition**: Split functions into single purpose sub-functions.
 
-```python
 
-```
-
-Destination
-
-```python
-
-```
-
-==**Future Recommendations**==
-Is the source data in good shape for immediate downstream use? That is, is the data of good quality? What post-processing is required to serve it? What are data-quality risks (e.g., could bot traffic to a website contaminate the data)?
-Does the data require in-flight processing for downstream ingestion if the data is from a streaming source?
-
-## How to use this repo
-
-**Create a virtual environment to install libraries and packages**
-
-It’s best practice to use a virtual environment hidden in the project folder. This allows use install packages and use different versions of python. Start by creating a virtual environment:
-
-```powershell
-python -m venv venv
-```
-
-**Now, navigate to the amplitude directory and activate the environment:**
-
-```Powershell
-.\venv\Scripts\activate
-```
-
-**Install dependencies**
-
-```Powershell
-pip install requests dotenv
-```
-
-**Create an .env file and add credentials**
-
-```plaintext
-AMP_API_KEY=''
-AMP_SECRET_KEY=''
-AMP_DATA_REGION = 'EU Residency Server'
-```
