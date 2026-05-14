@@ -84,6 +84,10 @@ See use cases in Lucid.
 
 ---
 
-- **How users can get started**: Installation/setup instructions with usage examples
-- **Where users can get help**: Support resources and documentation links
-- **Who maintains and contributes**: Maintainer information and contribution guidelines
+- **How users can get started**: Installation/setup instructions with usage examples.
+- **Where users can get help**: Support resources and documentation links.
+- **Who maintains and contributes**: Maintainer information and contribution guidelines.
+- **Alternative to Snowpipe**: Add a procedure to pull new data to the raw table for the scheduled task.
+- **Schedule task**: Schedule taks to call the procedures related to this pipeline.
+- **Rename primary keys**: Call it primary_key_hash instead of something like location_id for quick onboarding.
+- **Log loadtimes**: Include timestamps for SQL procedures.
