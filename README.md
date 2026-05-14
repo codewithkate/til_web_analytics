@@ -52,9 +52,9 @@ With the exception of Events which has `event_id` as its primary key, surrogate 
 ```sql
 select
 	md5(concat(
-        coalesce(cast(country), ''),
-        coalesce(cast(region), '')
-        coalesce(cast(city), '')
+        coalesce(cast(country), '')
+        , coalesce(cast(region), '')
+        , coalesce(cast(city), '')
         )
     ) as location_id
 from amplitude_base
@@ -91,3 +91,4 @@ See use cases in Lucid.
 - **Schedule task**: Schedule taks to call the procedures related to this pipeline.
 - **Rename primary keys**: Call it primary_key_hash instead of something like location_id for quick onboarding.
 - **Log loadtimes**: Include timestamps for SQL procedures.
+- **Add stream**: Currently the insert-only command results in duplicate rows without a stream on the base table used in subsequent updates.
