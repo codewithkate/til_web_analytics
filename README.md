@@ -90,5 +90,9 @@ See use cases in Lucid.
 - **Alternative to Snowpipe**: Add a procedure to pull new data to the raw table for the scheduled task.
 - **Schedule task**: Schedule taks to call the procedures related to this pipeline.
 - **Rename primary keys**: Call it primary_key_hash instead of something like location_id for quick onboarding.
-- **Log loadtimes**: Include timestamps for SQL procedures.
+- **Log loadtimes**: Include timestamps for when rows were inserted by SQL procedures.
 - **Add stream**: Currently the insert-only command results in duplicate rows without a stream on the base table used in subsequent updates.
+- **Left Join Lateral Flatten**: Bring in nested json without using CTEs.
+- **Get IP Owners**: Get Snowflake admin permission to install python packages, like ipwhois or use AWS Lambda + dbt
+- **Organize S3 bucket**: Add folders to S3 for python-import/year/month/day
+- **Trade-offs & Considerations**: Snowpipe vs Scheduled Task, Materializations based on estimated compute, etc..
