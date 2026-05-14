@@ -29,7 +29,7 @@ Unzip .zip and .gz files and copy contents into a output location.
 
 ### 🥉 Bronze layer
 
-Parse multiple layers of json.
+A storage integration was setup between the Amplitude S3 bucket in AWS and Snowflake. New json files are copied into the raw table through a Snowpipe + SQS Queue.
 
 ### 🥈 Silver Layer
 
@@ -37,7 +37,7 @@ Parse multiple layers of json.
 
 **Base table**
 
-The base table is a set of fields that are returned by the [Amplitude Export API](). Each field was evaluated and a list of excluded fields is noted in the transformation_test.sql.
+The base table extracts a set of fields store din the raw table's json objects. Each field was evaluated and a list of excluded fields is noted in the transformation_test.sql.
 
 **Dimension tables**
 
@@ -77,6 +77,8 @@ left join dim_amplitude_locations as u
 ```
 
 ### 🥇 Gold Layer
+
+See use cases in Lucid.
 
 ## Planned Improvements
 
