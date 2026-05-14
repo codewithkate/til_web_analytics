@@ -82,8 +82,6 @@ See use cases in Lucid.
 
 ## Planned Improvements
 
----
-
 - **How users can get started**: Installation/setup instructions with usage examples.
 - **Where users can get help**: Support resources and documentation links.
 - **Who maintains and contributes**: Maintainer information and contribution guidelines.
