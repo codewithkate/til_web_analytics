@@ -27,9 +27,7 @@ Unzip .zip and .gz files and copy contents into a output location.
 
 ## Transform: Medallion Architecture
 
----
-
-## 🥉 Bronze layer
+### 🥉 Bronze layer
 
 Parse multiple layers of json.
 
@@ -78,7 +76,7 @@ left join dim_amplitude_locations as u
     and b.city = u.city
 ```
 
-## 🥇 Gold Layer
+### 🥇 Gold Layer
 
 ## Planned Improvements
 
