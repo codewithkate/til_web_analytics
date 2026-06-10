@@ -1,29 +1,96 @@
-# ELT Library 
-Extract and Load data from an API to AWS Bucket.
+# Data Engineering Solution for Web Analytics
+
+Extract and Load data from an API to AWS Bucket. Then integrate, transform, and automate the data in Snowflake.
 
 ![](src/amplitude_extract_diagram.png)
 _figure 1_
+
+## Extract: Move data from Amplitude API to an AWS S3 Bucket
+
+---
 
 **Make an API Call**
 
 Make a GET Request that saves the result to memory.
 
-**Extract files**
+**Decompress files files**
 
 Unzip .zip and .gz files and copy contents into a output location.
 
 **Other Features**
 
-- Upload files into an S3 Bucket
-- Logging
-
-
-## Planned Improvements
----
-- **How users can get started**: Installation/setup instructions with usage examples
-- **Where users can get help**: Support resources and documentation links
-- **Who maintains and contributes**: Maintainer information and contribution guidelines
+- **Logging**: Store logs when running on local machine.
 - **Parameterization**: Accept parameters instead of a hardcoded values.
 - **Functional Decomposition**: Split functions into single purpose sub-functions.
+- **Cloud Storage**: Upload files into an S3 Bucket
+- **Transformation**: Transform json into structure data
 
+## Transform: Medallion Architecture
 
+### 🥉 Bronze layer
+
+A storage integration was setup between the Amplitude S3 bucket in AWS and Snowflake. New json files are copied into the raw table through a Snowpipe + SQS Queue.
+
+### 🥈 Silver Layer
+
+[View Entity Relationship Diagram]()
+
+**Base table**
+
+The base table extracts a set of fields store din the raw table's json objects. Each field was evaluated and a list of excluded fields is noted in the transformation_test.sql.
+
+**Dimension tables**
+
+These are the dimension tables:
+
+- Locations
+- Users
+- Events
+
+With the exception of Events which has `event_id` as its primary key, surrogate keys are generated using the MD5 algorithm to create a unique and deterministic identifier for the table.
+
+```sql
+select
+	md5(concat(
+        coalesce(cast(country), '')
+        , coalesce(cast(region), '')
+        , coalesce(cast(city), '')
+        )
+    ) as location_id
+from amplitude_base
+```
+
+**Fact Table**
+
+Fact tables contain foreign keys to the dimension tables. As mentioned above, Events were identified with the event_id that is produced from Amplitude's API. However, the Location and User dimensions have surrogate keys generated with the md5 algorithm. Intentionally, MD5 has inconsistent value returns, so the surrogate key cannot simply be regenerated the same way it was in the dimension tables. Instead, we will join the dimension tables to the fact table to select the proper foreign key.
+
+```sql
+select
+    event_id
+    ...
+    , l.location_id
+from amplitude_base as b
+left join dim_amplitude_locations as u
+    on b.country = u.country
+    and b.region = u.region
+    and b.city = u.city
+```
+
+### 🥇 Gold Layer
+
+See use cases in Lucid.
+
+## Planned Improvements
+
+- **How users can get started**: Installation/setup instructions with usage examples.
+- **Where users can get help**: Support resources and documentation links.
+- **Who maintains and contributes**: Maintainer information and contribution guidelines.
+- **Alternative to Snowpipe**: Add a procedure to pull new data to the raw table for the scheduled task.
+- **Schedule task**: Schedule taks to call the procedures related to this pipeline.
+- **Rename primary keys**: Call it primary_key_hash instead of something like location_id for quick onboarding.
+- **Log loadtimes**: Include timestamps for when rows were inserted by SQL procedures.
+- **Add stream**: Currently the insert-only command results in duplicate rows without a stream on the base table used in subsequent updates.
+- **Left Join Lateral Flatten**: Bring in nested json without using CTEs.
+- **Get IP Owners**: Get Snowflake admin permission to install python packages, like ipwhois or use AWS Lambda + dbt
+- **Organize S3 bucket**: Add folders to S3 for python-import/year/month/day
+- **Trade-offs & Considerations**: Snowpipe vs Scheduled Task, Materializations based on estimated compute, etc..
